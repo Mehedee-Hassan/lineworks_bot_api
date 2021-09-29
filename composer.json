@@ -1,0 +1,9 @@
+{
+    "require": {
+        "monolog/monolog": "^2.3",
+        "guzzlehttp/guzzle": "^7.3",
+        "firebase/php-jwt": "^5.4",
+        "linecorp/line-bot-sdk": "^7.2",
+        "vlucas/phpdotenv": "^5.3"
+    }
+}
