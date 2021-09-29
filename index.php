@@ -25,7 +25,7 @@ $t = $_ENV["TEST"];
 
 
 echo $t;
-sendMessage("test test test",$_ENV["ACCOUNTID"]);
+sendMessage("test test test",testbot$_ENV["ACCOUNTID"]);
 
 
   function sendMessage($message, $accountId)
@@ -121,5 +121,7 @@ sendMessage("test test test",$_ENV["ACCOUNTID"]);
 	
 	1. add the bot into admin panel
 	2. register bot
+	
+	https://forum.worksmobile.com/jp/posts/100717/roomId%E3%81%AB%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E9%80%81%E3%82%8B
 	
 	*/
