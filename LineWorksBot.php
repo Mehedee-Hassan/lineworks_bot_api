@@ -16,15 +16,15 @@ use GuzzleHttp\Client;
 class LineWorksBot{
 
 	/*
-	@ LineWorks@ƒ{ƒbƒg‚©‚çƒƒbƒZ[ƒW‚ğ‘—‚é
-	@@ ŒÄ‚Ô:
-		LineWorksBot(true) // ‚µ‚ÄDEBUG‚·‚é
-		LineWorksBot(false) // DEBUG‚µ‚È‚¢
-	@@‹@”\F
+	@ LineWorksã€€ãƒœãƒƒãƒˆã‹ã‚‰ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’é€ã‚‹
+	@@ å‘¼ã¶:
+		LineWorksBot(true) // è©¦ã—ã¦DEBUGã™ã‚‹
+		LineWorksBot(false) // DEBUGã—ãªã„
+	@@æ©Ÿèƒ½ï¼š
 		sendMessage(message,accountId)
-			message : ‘—‚è‚½‚¢ƒƒbƒZ[ƒW
-			accountId:‘Šè‚Ì–¼‘O[—á‚¦‚ÎFmehedee@hdn,hayashi@hdn,dtakahashi@hdn]
-			@		
+			message : é€ã‚ŠãŸã„ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+			accountId:ç›¸æ‰‹ã®åå‰[ä¾‹ãˆã°ï¼šmehedee@hdn,hayashi@hdn,dtakahashi@hdn]
+			ã€€		
 	*/	
 	private $DEBUG=false;
 
@@ -48,7 +48,7 @@ class LineWorksBot{
 			$url = "https://apis.worksmobile.com/r/${apiId}/message/v1/bot/${botNo}/message/push";
 			$options = [
 				'json' => [
-					"accountId" => $accountId,
+					"roomId" => "98041249",
 					"content" => [
 						"type" => "text",
 						"text" => $message
@@ -61,14 +61,17 @@ class LineWorksBot{
 				]
 			];
 			
-			if ($this->DEBUG == true){
-				echo "\nACCOUNT ID:\n";
-				print_r($accountId);
-				
-			}		
 			$client = new Client();
 			$response = $client->request("POST", $url, $options);
 			$status = (string) $response->getStatusCode();
+
+			if ($this->DEBUG == true){
+				echo "\nACCOUNT ID:\n";
+				print_r($accountId);
+				echo "\nstatus code :\n";
+				echo $status;
+			}		
+
     }
 
     function getToken()
@@ -82,7 +85,7 @@ class LineWorksBot{
     {
         $serverId = $_ENV["SERVERID"];
         $privateKey = $_ENV["PRIVATEKEY"];
-		//PRIVATEKEY‚ÌŠÂ‹«•Ï”‚ÅƒT[ƒo[‚©‚ç‚à‚ç‚Á‚½private key‚É\n‚ğ’Ç‰Á‚µ‚È‚¢‚Æ‚¢‚¯‚È‚¢‚Å‚·B
+		//PRIVATEKEYã®ç’°å¢ƒå¤‰æ•°ã§ã‚µãƒ¼ãƒãƒ¼ã‹ã‚‰ã‚‚ã‚‰ã£ãŸprivate keyã«\nã‚’è¿½åŠ ã—ãªã„ã¨ã„ã‘ãªã„ã§ã™ã€‚
 		return JWT::encode([
             "iss" => $serverId,
             "iat" => time(),
@@ -119,10 +122,92 @@ class LineWorksBot{
 	
         return $json["access_token"];
     }
-}
 	
-	//$lineWorksBot = new LineWorksBot(true);
-     //$lineWorksBot->sendMessage("test test mehedee",$_ENV["ACCOUNTID"]);
+	function getAllMemeber($roomId){
+		//https://apis.worksmobile.com/r/{API ID}/message/v1/bot/{botNo}/room/{roomId}/accounts
+		
+		
+		$accessToken = $this->getToken();
+			if (!$accessToken) {
+				return;
+			}
+			$apiId = $_ENV["APIID"];
+			$botNo = $_ENV["BOTNO"];
+			$consumerKey = $_ENV["CONSUMERKEY"];
+			$url = "https://apis.worksmobile.com/r/${apiId}/message/v1/bot/${botNo}/room/${roomId}/accounts";
+			
+			$options = [
+				
+				'headers' => [
+					'Content-Type' => 'application/json;charset=UTF-8',
+					'consumerKey' => $consumerKey,
+					'Authorization' => "Bearer ${accessToken}"
+				]
+			];
+			
+			$client = new Client();
+			$response = $client->request("GET", $url, $options);
+			$status = (string) $response->getStatusCode();
+
+			if ($this->DEBUG == true){
+				echo "\nACCOUNT ID:\n";
+				print_r($roomId);
+				echo "\nstatus code :\n";
+				echo $status;
+				echo "\nresponse :\n";
+				print_r($response);
+			}		
+		
+	}
+	
+	
+	
+	function sendMessageChannel($message, $channelNo)
+    {
+			$accessToken = $this->getToken();
+			if (!$accessToken) {
+				return;
+			}
+			$apiId = $_ENV["APIID"];
+			$botNo = $_ENV["BOTNO"];
+			$consumerKey = $_ENV["CONSUMERKEY"];
+			$url = "https://apis.worksmobile.com/r/${apiId}/message/v1/bot/${botNo}/message/push";
+			$options = [
+				'json' => [
+					"roomId" => $channelNo,
+					"content" => [
+						"type" => "text",
+						"text" => $message
+					]
+				],
+				'headers' => [
+					'Content-Type' => 'application/json;charset=UTF-8',
+					'consumerKey' => $consumerKey,
+					'Authorization' => "Bearer ${accessToken}"
+				]
+			];
+			
+			$client = new Client();
+			$response = $client->request("POST", $url, $options);
+			$status = (string) $response->getStatusCode();
+
+			if ($this->DEBUG == true){
+				echo "\nACCOUNT ID:\n";
+				print_r($channelNo);
+				echo "\nstatus code :\n";
+				echo $status;
+			}		
+
+	}
+	}
+	
+	
+	$lineWorksBot = new LineWorksBot(true);
+	//$lineWorksBot->sendMessage("test test mehedee",$_ENV["ACCOUNTID"]);
+	$lineWorksBot->sendMessageChannel("this is channel message","98041249");
+	
+	
+	
 	
 	/*
 	important points
