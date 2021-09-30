@@ -48,7 +48,7 @@ class LineWorksBot{
 			$url = "https://apis.worksmobile.com/r/${apiId}/message/v1/bot/${botNo}/message/push";
 			$options = [
 				'json' => [
-					"roomId" => "98041249",
+					"accountId" => $accountId,
 					"content" => [
 						"type" => "text",
 						"text" => $message
@@ -201,9 +201,12 @@ class LineWorksBot{
 	}
 	}
 	
-	
+	//testing
 	$lineWorksBot = new LineWorksBot(true);
-	//$lineWorksBot->sendMessage("test test mehedee",$_ENV["ACCOUNTID"]);
+	
+	//account id
+	$lineWorksBot->sendMessage("test test mehedee",$_ENV["ACCOUNTID"]);
+	//channel id
 	$lineWorksBot->sendMessageChannel("this is channel message","98041249");
 	
 	
