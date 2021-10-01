@@ -11,6 +11,7 @@ use \Firebase\JWT\JWT;
 	2. BOTはADMIN画面に行って追加します。
 	3. 今はTESTというBOTは追加してあるからそれは使っています
 
+使い方は例として一番下のLineWorksBotTestというclassに書いてあります。
 */
 
 class LineWorksConst{
@@ -203,21 +204,26 @@ class LineWorksBot{
 			if ($this->DEBUG == true){
 				echo "\nACCOUNT ID:\n";
 				print_r($channelNo);
-				echo "\nstatus code :\n";
+				echo の"\nstatus code :\n";
 				echo $status;
 			}		
 
 	}
 	}
+class LineWorksBotTest{	
 	
-	//testing
-	$lineWorksBot = new LineWorksBot(false);
-	
-	//account id
-	//$lineWorksBot->sendMessage("test test mehedee",$_ENV["ACCOUNTID"]);
-	//channel id
-	$lineWorksBot->sendMessageChannel("this is channel message","98041249");
-	
-	
-	
+	function __construct(){
+		//testing
+		$lineWorksBot = new LineWorksBot(false);
+
+		//account id　にメッセージ送る：BOTから人
+		//$lineWorksBot->sendMessage("test test mehedee","ACCOUNTID");
+		//channel id　にメッセージ送る：BOTからGROUP”
+		//channel id とる方法：”POST/lineworks/”　とう言うフォルダーにおいてあります。
+		$lineWorksBot->sendMessageChannel("this is channel message","98041249");
+	}
+}
+
+//$lineWorksTest = new LineWorksBotTest();
+
 	
