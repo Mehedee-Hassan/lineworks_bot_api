@@ -15,21 +15,27 @@ use \Firebase\JWT\JWT;
 */
 
 class LineWorksConst{
-	public const APIID = "APIID";
-	public const BOTNO = "BOTNO";
-	public const CONSUMERKEY = "CONSUMERKEY";
+	public const APIID = "APIID"; //API ID
 	
 	
-	// 「下の分」この２つ「SERVERID、PRIVATEKEY」は　3か月で一回変わる「担当の方登録時ラジオボタンを押して期間を選べます。」
+	public const BOTNO = "BOTNO"; //Bot No　例：1416112
+	
 	//　神田さんにお願いします:https://developers.worksmobile.com/jp/console/openapi/main　
 	//　に行って”Server List”作ります
 	//  例：
 	//  Server List(ID登録タイプ)
 	//  例：ID[SERVERIDです]：9fu7a90ca98fsf433f9aa520640868kcf8fc
-	//　最近もらった：２８日１０月２０２１年
+	
 	public const SERVERID = "SERVERID";
+	
 	//　private_◯◯◯◯.key　というファイルから全部コピーして行末に”￥ｎ”をつけてここに貼り付けます。
 	public const PRIVATEKEY = "PRIVATEKEY";
+	
+	// 「下の分」「CONSUMERKEY」は　[Server API Consumer Key ] 3か月で一回変わる
+	//　最近もらった：２８日１０月２０２１年
+	public const CONSUMERKEY = "CONSUMERKEY";
+	
+	
 	//　ここまで変わる。
 }
 
