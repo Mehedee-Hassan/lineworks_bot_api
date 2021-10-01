@@ -1,15 +1,36 @@
 <?php
 
 require_once realpath(__DIR__ . '/vendor/autoload.php');
-
-// Looing for .env at the root directory
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
 use \Firebase\JWT\JWT;
 
 
+/*
+新しいBOT登録「大事な点　、担当の方」：
+	
+	1. BOTを登録します。
+	2. BOTはADMIN画面に行って追加します。
+	3. 今はTESTというBOTは追加してあるからそれは使っています
 
+*/
 
+class LineWorksConst{
+	public const APIID = "APIID";
+	public const BOTNO = "BOTNO";
+	public const CONSUMERKEY = "CONSUMERKEY";
+	
+	
+	// 「下の分」この２つ「SERVERID、PRIVATEKEY」は　3か月で一回変わる
+	//　神田さんにお願いします:https://developers.worksmobile.com/jp/console/openapi/main　
+	//　に行って”Server List”作ります
+	//  例：
+	//  Server List(ID登録タイプ)
+	//  例：ID[SERVERIDです]：9fu7a90ca98fsf433f9aa520640868kcf8fc
+	//　最近もらった：２８日１０月２０２１年
+	public const SERVERID = "SERVERID";
+	//　private_◯◯◯◯.key　というファイルから全部コピーして行末に”￥ｎ”をつけてここに貼り付けます。
+	public const PRIVATEKEY = "PRIVATEKEY";
+	//　ここまで変わる。
+}
 
 
 class LineWorksBot{
@@ -26,10 +47,11 @@ class LineWorksBot{
 			　		
 	*/	
 	private $DEBUG=false;
-
+	private $CONSTANT;
 	  
 	public function __construct($DEBUG){
 		$this->DEBUG = $DEBUG;
+		$this->CONSTANT =new LineWorksConst();
 	}	  
 	
 	
@@ -41,8 +63,13 @@ class LineWorksBot{
 			if (!$accessToken) {
 				return;
 			}
-			$apiId = $_ENV["APIID"];
-			$botNo = $_ENV["BOTNO"];
+			//$apiId = $_ENV["APIID"];
+			//$botNo = $_ENV["BOTNO"];
+	    		
+	    		$apiId = $this->CONSTANT->APIID;
+			$botNo = $this->CONSTANT->BOTNO;
+	    
+	    
 			$consumerKey = $_ENV["CONSUMERKEY"];
 			$url = "https://apis.worksmobile.com/r/$apiId/message/v1/bot/$botNo/message/push";
 
@@ -89,8 +116,8 @@ class LineWorksBot{
 
     function getJwt()
     {
-        $serverId = $_ENV["SERVERID"];
-        $privateKey = $_ENV["PRIVATEKEY"];
+        $serverId = $this->CONSTANT->SERVERID;
+        $privateKey = $this->CONSTANT->PRIVATEKEY;
 		//PRIVATEKEYの環境変数でサーバーからもらったprivate keyに\nを追加しないといけないです。
 		return JWT::encode([
             "iss" => $serverId,
@@ -101,7 +128,7 @@ class LineWorksBot{
 
     function getAccessToken($jwttoken)
     {
-        $apiId = $_ENV["APIID"];
+        $apiId = $this->CONSTANT->APIID;
         $url = "https://auth.worksmobile.com/b/${apiId}/server/token";
 	
 		$data = array(
@@ -144,9 +171,9 @@ class LineWorksBot{
 			if (!$accessToken) {
 				return;
 			}
-			$apiId = $_ENV["APIID"];
-			$botNo = $_ENV["BOTNO"];
-			$consumerKey = $_ENV["CONSUMERKEY"];
+			$apiId = $this->CONSTANT->APIID;
+			$botNo = $this->CONSTANT->BOTNO;
+			$consumerKey = $this->CONSTANT->CONSUMERKEY;
 			$url = "https://apis.worksmobile.com/r/${apiId}/message/v1/bot/${botNo}/message/push";
 		
 			
@@ -194,12 +221,3 @@ class LineWorksBot{
 	
 	
 	
-	/*
-	important points
-	
-	1. add the bot into admin panel
-	2. register bot
-	
-	https://forum.worksmobile.com/jp/posts/100717/roomId%E3%81%AB%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E9%80%81%E3%82%8B
-	
-	*/
