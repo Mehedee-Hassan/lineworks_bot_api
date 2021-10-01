@@ -20,7 +20,7 @@ class LineWorksConst{
 	public const CONSUMERKEY = "CONSUMERKEY";
 	
 	
-	// 「下の分」この２つ「SERVERID、PRIVATEKEY」は　3か月で一回変わる
+	// 「下の分」この２つ「SERVERID、PRIVATEKEY」は　3か月で一回変わる「担当の方登録時ラジオボタンを押して期間を選べます。」
 	//　神田さんにお願いします:https://developers.worksmobile.com/jp/console/openapi/main　
 	//　に行って”Server List”作ります
 	//  例：
