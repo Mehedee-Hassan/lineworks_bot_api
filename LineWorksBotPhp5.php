@@ -10,15 +10,14 @@ use \Firebase\JWT\JWT;
 	1. BOTを登録します。
 	2. BOTはADMIN画面に行って追加します。
 	3. 今はTESTというBOTは追加してあるからそれは使っています
-
 使い方は例として一番下のLineWorksBotTestというclassに書いてあります。
 */
 
 class LineWorksConst{
-	public const APIID = "APIID"; //API ID
+	const APIID = "APIID"; //API ID
 	
 	
-	public const BOTNO = "BOTNO"; //Bot No　例：1416112
+	const BOTNO = "BOTNO"; //Bot No　例：1416112
 	
 	//　神田さんにお願いします:https://developers.worksmobile.com/jp/console/openapi/main　
 	//　に行って”Server List”作ります
@@ -26,17 +25,23 @@ class LineWorksConst{
 	//  Server List(ID登録タイプ)
 	//  例：ID[SERVERIDです]：9fu7a90ca98fsf433f9aa520640868kcf8fc
 	
-	public const SERVERID = "SERVERID";
+	const SERVERID = "SERVERID";
 	
 	//　private_◯◯◯◯.key　というファイルから全部コピーして行末に”￥ｎ”をつけてここに貼り付けます。
-	public const PRIVATEKEY = "PRIVATEKEY";
+	const PRIVATEKEY = "PRIVATEKEY";
 	
 	// 「下の分」「CONSUMERKEY」は　[Server API Consumer Key ] 3か月で一回変わる
 	//　最近もらった：２８日１０月２０２１年
-	public const CONSUMERKEY = "CONSUMERKEY";
+	const CONSUMERKEY = "CONSUMERKEY";
 	
 	
 	//　ここまで変わる。
+	
+	function __construct($debug){
+		if ($debug == true){
+			echo "LineWorksConst.class";
+		}		
+	}
 }
 
 
@@ -58,7 +63,7 @@ class LineWorksBot{
 	  
 	public function __construct($DEBUG){
 		$this->DEBUG = $DEBUG;
-		$this->CONSTANT =new LineWorksConst();
+		$this->CONSTANT =new LineWorksConst(true);
 	}	  
 	
 	
@@ -73,8 +78,8 @@ class LineWorksBot{
 			//$apiId = $_ENV["APIID"];
 			//$botNo = $_ENV["BOTNO"];
 	    		
-	    		$apiId = $this->CONSTANT->APIID;
-			$botNo = $this->CONSTANT->BOTNO;
+	    		$apiId = LineWorksConst::APIID;
+			$botNo = LineWorksConst::BOTNO;
 	    
 	    
 			$consumerKey = $_ENV["CONSUMERKEY"];
@@ -123,8 +128,8 @@ class LineWorksBot{
 
     function getJwt()
     {
-        $serverId = $this->CONSTANT->SERVERID;
-        $privateKey = $this->CONSTANT->PRIVATEKEY;
+        $serverId = LineWorksConst::SERVERID;
+        $privateKey = LineWorksConst::PRIVATEKEY;
 		//PRIVATEKEYの環境変数でサーバーからもらったprivate keyに\nを追加しないといけないです。
 		return JWT::encode([
             "iss" => $serverId,
@@ -135,7 +140,7 @@ class LineWorksBot{
 
     function getAccessToken($jwttoken)
     {
-        $apiId = $this->CONSTANT->APIID;
+        $apiId = LineWorksConst::APIID;
         $url = "https://auth.worksmobile.com/b/${apiId}/server/token";
 	
 		$data = array(
@@ -178,9 +183,9 @@ class LineWorksBot{
 			if (!$accessToken) {
 				return;
 			}
-			$apiId = $this->CONSTANT->APIID;
-			$botNo = $this->CONSTANT->BOTNO;
-			$consumerKey = $this->CONSTANT->CONSUMERKEY;
+			$apiId = LineWorksConst::APIID;
+			$botNo = LineWorksConst::BOTNO;
+			$consumerKey = LineWorksConst::CONSUMERKEY;
 			$url = "https://apis.worksmobile.com/r/${apiId}/message/v1/bot/${botNo}/message/push";
 		
 			
@@ -210,7 +215,7 @@ class LineWorksBot{
 			if ($this->DEBUG == true){
 				echo "\nACCOUNT ID:\n";
 				print_r($channelNo);
-				echo の"\nstatus code :\n";
+				echo "\nstatus code :\n";
 				echo $status;
 			}		
 
@@ -231,5 +236,3 @@ class LineWorksBotTest{
 }
 
 //$lineWorksTest = new LineWorksBotTest();
-
-	
