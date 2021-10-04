@@ -10,6 +10,7 @@ use \Firebase\JWT\JWT;
 	1. BOTを登録します。
 	2. BOTはADMIN画面に行って追加します。
 	3. 今はTESTというBOTは追加してあるからそれは使っています
+	
 使い方は例として一番下のLineWorksBotTestというclassに書いてあります。
 */
 
@@ -28,7 +29,7 @@ class LineWorksConst{
 	const SERVERID = "SERVERID";
 	
 	//　private_◯◯◯◯.key　というファイルから全部コピーして行末に”￥ｎ”をつけてここに貼り付けます。
-	const PRIVATEKEY = "PRIVATEKEY";
+	const PRIVATEKEY = "PRIVATEKEY"
 	
 	// 「下の分」「CONSUMERKEY」は　[Server API Consumer Key ] 3か月で一回変わる
 	//　最近もらった：２８日１０月２０２１年
@@ -36,6 +37,13 @@ class LineWorksConst{
 	
 	
 	//　ここまで変わる。
+	//channel id とる方法：\\10.0.32.52\社内文書etc\L1_ＴＥＭＰ\01.ユーザ用_POST\メヘディさんPOST\lineworks\lineworks.docxとう言うフォルダーにおいてあります。
+	const CHANNELID = "CHANNELID";
+
+	const ACCOUNTID="ACCOUNTID";
+	
+	
+	const MESSAGE_SEND_URL = "https://apis.worksmobile.com/r/".LineWorksConst::APIID."/message/v1/bot/".LineWorksConst::BOTNO."/message/push";
 	
 	function __construct($debug){
 		if ($debug == true){
@@ -50,20 +58,20 @@ class LineWorksBot{
 	/*
 	@ LineWorks　ボットからメッセージを送る
 	@@ 呼ぶ:
-		LineWorksBot(true) // 試してDEBUGする
+		LineWorksBot(true) // 試す：DEBUGする
 		LineWorksBot(false) // DEBUGしない
 	@@機能：
 		sendMessage(message,accountId)
-			message : 送りたいメッセージ
-			accountId:相手の名前[例えば：mehedee@hdn,hayashi@hdn,dtakahashi@hdn]
+			message : メッセージ内容
+			accountId:相手の名前[例えば：d-takahashi@hdn,hayashi@hdn,mehedee@hdn]
 			　		
 	*/	
 	private $DEBUG=false;
-	private $CONSTANT;
+
 	  
 	public function __construct($DEBUG){
 		$this->DEBUG = $DEBUG;
-		$this->CONSTANT =new LineWorksConst(true);
+		
 	}	  
 	
 	
@@ -78,12 +86,12 @@ class LineWorksBot{
 			//$apiId = $_ENV["APIID"];
 			//$botNo = $_ENV["BOTNO"];
 	    		
-	    		$apiId = LineWorksConst::APIID;
+	    	$apiId = LineWorksConst::APIID;
 			$botNo = LineWorksConst::BOTNO;
 	    
 	    
-			$consumerKey = $_ENV["CONSUMERKEY"];
-			$url = "https://apis.worksmobile.com/r/$apiId/message/v1/bot/$botNo/message/push";
+			$consumerKey = LineWorksConst::CONSUMERKEY;
+			$url = LineWorksConst::MESSAGE_SEND_URL;
 
 			$data = array(
 				"accountId" => $accountId,
@@ -102,7 +110,6 @@ class LineWorksBot{
 						'content' => json_encode($data),
 				)
 			);
-			print_r($options1);
 			$context  = stream_context_create($options1);
 			$result = file_get_contents($url, false, $context);
 			
@@ -113,8 +120,7 @@ class LineWorksBot{
 			if ($this->DEBUG == true){
 				echo "\nACCOUNT ID:\n";
 				print_r($accountId);
-				echo "\nstatus code :\n";
-				echo $status;
+				
 			}		
 
     }
@@ -130,7 +136,7 @@ class LineWorksBot{
     {
         $serverId = LineWorksConst::SERVERID;
         $privateKey = LineWorksConst::PRIVATEKEY;
-		//PRIVATEKEYの環境変数でサーバーからもらったprivate keyに\nを追加しないといけないです。
+
 		return JWT::encode([
             "iss" => $serverId,
             "iat" => time(),
@@ -157,9 +163,7 @@ class LineWorksBot{
 
 		$context  = stream_context_create($options1);
 		$result = file_get_contents($url, false, $context);
-		echo "test";
-		print_r($result);
-		echo "test";
+		
 	
         
         $json = json_decode($result, true);
@@ -186,7 +190,7 @@ class LineWorksBot{
 			$apiId = LineWorksConst::APIID;
 			$botNo = LineWorksConst::BOTNO;
 			$consumerKey = LineWorksConst::CONSUMERKEY;
-			$url = "https://apis.worksmobile.com/r/${apiId}/message/v1/bot/${botNo}/message/push";
+			$url = LineWorksConst::MESSAGE_SEND_URL;
 		
 			
 			
@@ -208,19 +212,18 @@ class LineWorksBot{
 						'content' => json_encode($data),
 				)
 			);
-			print_r($options1);
+			
 			$context  = stream_context_create($options1);
 			$result = file_get_contents($url, false, $context);
 
 			if ($this->DEBUG == true){
 				echo "\nACCOUNT ID:\n";
 				print_r($channelNo);
-				echo "\nstatus code :\n";
-				echo $status;
+
 			}		
 
 	}
-	}
+}
 class LineWorksBotTest{	
 	
 	function __construct(){
@@ -228,11 +231,13 @@ class LineWorksBotTest{
 		$lineWorksBot = new LineWorksBot(false);
 
 		//account id　にメッセージ送る：BOTから人
-		//$lineWorksBot->sendMessage("test test mehedee","ACCOUNTID");
-		//channel id　にメッセージ送る：BOTからGROUP”
-		//channel id とる方法：”POST/lineworks/”　とう言うフォルダーにおいてあります。
-		$lineWorksBot->sendMessageChannel("this is channel message","98041249");
+		$messagetext = "mehedee にメッセージ送ります";
+		$lineWorksBot->sendMessage($messagetext,LineWorksConst::ACCOUNTID);
+
+         //channel id　にメッセージ送る：BOTからGROUP
+		$messagetext = "グループ　にメッセージ送ります";
+		$lineWorksBot->sendMessageChannel($messagetext,LineWorksConst::CHANNELID);
 	}
 }
-
-//$lineWorksTest = new LineWorksBotTest();
+//試す
+$lineWorksTest = new LineWorksBotTest();
