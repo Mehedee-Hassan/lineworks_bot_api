@@ -42,9 +42,7 @@ header='{
 
 }'
 
-# Use jq to set the dynamic `iat` and `exp`
-# fields on the header using the current time.
-# `iat` is set to now, and `exp` is now + 1 second.
+
 
 payload="{
 	\"iat\":$iat,
